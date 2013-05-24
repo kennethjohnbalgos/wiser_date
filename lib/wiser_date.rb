@@ -1,1 +1,1 @@
-require 'app/railtie' if defined?(Rails)
+require 'wiser_date/railtie' if defined?(Rails)
