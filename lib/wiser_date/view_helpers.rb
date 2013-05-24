@@ -2,37 +2,39 @@ require 'date'
 
 module WiserDate
   module ViewHelpers
-
+    
     include ActionView::Helpers::JavaScriptHelper
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::DateHelper
     include ActionView::Context    
-    
-    def wiser_date(timestamp, options = {})
+  
+    def wise_date(timestamp, options = {})
       # Options
       date_format = options.has_key?(:date_format) ? options[:date_format] : "%b %d, %Y"
       time_format = options.has_key?(:time_format) ? options[:time_format] : "%l:%M%P"
       humanize = options.has_key?(:humanize) ? options[:humanize] : true
       time_first = options.has_key?(:time_first) ? options[:time_first] : false
-      hide_same_year = options.has_key?(:hide_same_year) ? options[:hide_same_year] : true
-      
+      hide_same_year = options.has_key?(:hide_same_year) ? options[:hide_same_year] : false
+      capitalize = options.has_key?(:capitalize) ? options[:capitalize] : true
     
+  
       # Now
       time_now = Time.now
-    
+  
       # Formats
       flat_format = "%Y%m%d%H%M%S"
       plain_format = "%Y-%m-%d %H:%M:%S"
       custom_format = time_first ? "#{time_format} #{date_format}" : "#{date_format} #{time_format}"
-    
+  
       # Timestamps
       custom_timestamp = timestamp.strftime(custom_format)
       plain_timestamp = timestamp.strftime(plain_format)
-    
+  
       # Humanize Display
       if humanize
-        time_diff = ((time_now - timestamp.to_time).to_f / (60*60*24))
-        if time_now.strftime(plain_format) == timestamp.strftime(plain_format)
+        time_diff_in_seconds = (time_now - timestamp.to_time).ceil
+        time_diff = (time_diff_in_seconds / (60*60*24))
+        if time_diff_in_seconds <= 15
           custom_timestamp = "just now"
         elsif time_now.to_date - 1.day == timestamp.to_date 
           date_value = "yesterday"
@@ -45,6 +47,11 @@ module WiserDate
         end
       end
     
+      # Capitalize
+      if capitalize
+        custom_timestamp = custom_timestamp.to_s.capitalize
+      end
+  
       uniq_id = Digest::SHA1.hexdigest([Time.now, rand].join)
       html = content_tag(:span, custom_timestamp, 
         "id" => uniq_id,
@@ -56,7 +63,5 @@ module WiserDate
       html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta id=\"wiser_date\" data-value=\"#"+uniq_id+"\"/>')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')}});")
       html.html_safe
     end
-    
-    
   end
 end
