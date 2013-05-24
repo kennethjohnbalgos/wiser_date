@@ -1,58 +1,104 @@
 = Wiser Date for Rails
 
-[wiser_date](https://github.com/kennethjohnbalgos/wiser_date) is a date formatting plugin written by [Kenneth John Balgos](https://github.com/kennethjohnbalgos). Wiser Date features dynamic presentation of feed timestamps. Right now, it only displays the date statically. I'm writing the jQuery scripts to update the displays dynamically.
+WiserDate is a date formatting plugin written by Kenneth John Balgos (https://github.com/kennethjohnbalgos). Wiser Date features dynamic presentation of feed timestamps. Right now, it only displays the date statically. I'm writing the jQuery scripts to update the displayed dates in real-time and dynamic.
+
 
 == Installing Gem
 
     gem "wiser_date"
+    
+    
 
-== Using the javascripts -- Coming Soon
+== Dependency
+
+The Rails application should have jQuery to make the real-time feature work.
+
+
+== Using the javascripts - Not Yet Available
 
 Require jquery.wiser_date in your app/assets/application.js file.
 
     //= require jquery.wiser_date
+
 
 == Usage
 
 Use the wiser_date function in your views.
 
     <%= wiser_date @user.last_login_at %>
+    # Sample display within few seconds: just now
+    # Sample display within few minutes: about 30 minutes ago
+    # Sample display within the day: about 15 hours ago
+    # Sample display after the day: yesterday 12:21pm
+    # Sample display after 2 days: Sept 10, 2013 12:21pm
     
 @user.last_login_at can be any timestamp you want to display.
-Assume that the valus is set to Mon, 10 Sept 2012 12:21:16 UTC +00:00.
 
-== Options
-
-You can customized the behavior of the date display using the following options:
+Assume that the value is "Mon, 10 Sept 2012 12:21:16 UTC +00:00".
 
 
-date_format - Overrides the default date format [default: "%b %d, %Y"]
+== Options & Examples
+
+You can customize the behavior of the date display by using the following options:
+
+* *date_format* - overrides the default date format [default: "%b %d, %Y"]
     
     <%= wiser_date @user.last_login_at, :date_format => "%Y-%m-%d" %>
-    # 
+    # Sample display within few seconds: just now
+    # Sample display within few minutes: about 30 minutes ago
+    # Sample display within the day: about 15 hours ago
+    # Sample display after the day: yesterday 12:21pm
+    # Sample display after 2 days: 2012-09-10 12:21pm
 
-time_format - Overrides the default time format [default: "%l:%M%P"]
+* *time_format* - overrides the default time format [default: "%l:%M%P"]
     
     <%= wiser_date @user.last_login_at, :time_format => "%H:%M:%S" %>
+    # Sample display within few seconds: just now
+    # Sample display within few minutes: about 30 minutes ago
+    # Sample display within the day: about 15 hours ago
+    # Sample display after the day: yesterday 12:21:16
+    # Sample display after 2 days: Sept 10, 2013 12:21:16
 
-humanize - Convert date to more readable string [default: true]
+* *humanize* - converts date to more readable string [default: true]
     
     <%= wiser_date @user.last_login_at, :humanize => false %>
+    # Sample display within few seconds: Sept 10, 2013 12:21pm
+    # Sample display within few minutes: Sept 10, 2013 12:21pm
+    # Sample display within the day: Sept 10, 2013 12:21pm
+    # Sample display after the day: Sept 10, 2013 12:21pm
+    # Sample display after 2 days: Sept 10, 2013 12:21pm
 
-time_first - Display time first instead of date [default: false]
+* *time_first* - displays time first instead of date [default: false]
     
     <%= wiser_date @user.last_login_at, :time_first => true %>
+    # Sample display within few seconds: just now
+    # Sample display within few minutes: about 30 minutes ago
+    # Sample display within the day: about 15 hours ago
+    # Sample display after the day: 12:21pm yesterday 
+    # Sample display after 2 days: 12:21pm Sept 10, 2013
 
-hide_same_year - Will not display the year if the it is the same with the current year [default: false]
+* *hide_same_year* - will not display the year if the it is the same with the present year [default: false]
     
     <%= wiser_date @user.last_login_at, :hide_same_year => true %>
+    # Sample display within few seconds: just now
+    # Sample display within few minutes: about 30 minutes ago
+    # Sample display within the day: about 15 hours ago
+    # Sample display after the day: yesterday 12:21pm
+    # Sample display after 2 days: Sept 10, 12:21pm 
 
-capitalize - Capitalize the first letter of the date displayed [default: true]
+* *capitalize* - capitalizes the first letter of the date displayed [default: true]
     
     <%= wiser_date @user.last_login_at, :capitalize => true %>
+    # Sample display within few seconds: Just now
+    # Sample display within few minutes: About 30 minutes ago
+    # Sample display within the day: About 15 hours ago
+    # Sample display after the day: Yesterday 12:21pm
+    # Sample display after 2 days: Sept 10, 12:21pm 
+
 
 == Thanks
-Thanks to [Kenneth John Balgos](https://github.com/kennethjohnbalgos) for writing an awesome real-time date display plugin.
+Thanks to me (https://github.com/kennethjohnbalgos) for writing an awesome real-time date display plugin :p
+
 
 == Support
-Open an issue in [wiser_date](https://github.com/kennethjohnbalgos/wiser_date) if you need further support or want to report a bug.
+Open an issue in https://github.com/kennethjohnbalgos/wiser_date if you need further support or want to report a bug.
