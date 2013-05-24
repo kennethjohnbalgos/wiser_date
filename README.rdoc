@@ -7,11 +7,10 @@ WiserDate is a date formatting plugin written by Kenneth John Balgos (https://gi
 
     gem "wiser_date"
     
-    
 
 == Dependency
 
-The Rails application should have jQuery to make the real-time feature work.
+Rails >=3.1 and jQuery to make the real-time feature work.
 
 
 == Using the javascripts - Not Yet Available
@@ -94,6 +93,14 @@ You can customize the behavior of the date display by using the following option
     # Sample display within the day: About 15 hours ago
     # Sample display after the day: Yesterday 12:21pm
     # Sample display after 2 days: Sept 10, 12:21pm 
+
+* *custom_class* - adds custom classes to the containter span of the date [default: nil]
+    
+    <%= wiser_date @user.last_login_at, :custom_class => "date_tooltip" %>
+
+* *time_now* - accepts complete timestamp as the basis of time distances [default: nil]
+    
+    <%= wiser_date @user.last_login_at, :time_now => "2012-09-10 12:21:16 +0000" %>
 
 
 == Thanks
