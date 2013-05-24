@@ -8,7 +8,7 @@ module WiserDate
     include ActionView::Helpers::DateHelper
     include ActionView::Context    
   
-    def wise_date(timestamp, options = {})
+    def wiser_date(timestamp, options = {})
       # Options
       date_format = options.has_key?(:date_format) ? options[:date_format] : "%b %d, %Y"
       time_format = options.has_key?(:time_format) ? options[:time_format] : "%l:%M%P"
