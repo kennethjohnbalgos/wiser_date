@@ -28,7 +28,7 @@ Use the wiser_date function in your views.
 
 You can customized the behavior of the date display using the following options:
 
-* Date Format - The default date format is "%b %d, %Y" which displays "Jan 1, 2013".
+Date Format - The default date format is "%b %d, %Y" which displays "Jan 1, 2013".
     
     <%= wiser_date @user.last_login_at, :date_format => "%Y-%m-%d" %>
 
