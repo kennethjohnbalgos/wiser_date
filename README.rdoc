@@ -97,7 +97,7 @@ You can customize the behavior of the date display by using the following option
 
 
 == Thanks
-Thanks to me (https://github.com/kennethjohnbalgos) for writing an awesome real-time date display plugin :p
+Thanks to me for writing an awesome real-time date display plugin :p
 
 
 == Support
