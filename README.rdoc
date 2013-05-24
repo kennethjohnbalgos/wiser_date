@@ -1,0 +1,58 @@
+# Wiser Date for Rails
+
+[wiser_date](https://github.com/kennethjohnbalgos/wiser_date) is a date formatting plugin written by [Kenneth John Balgos](https://github.com/kennethjohnbalgos). Wiser Date features dynamic presentation of feed timestamps. Right now, it only displays the date statically. I'm writing the jQuery scripts to update the displays dynamically.
+
+## Installing Gem
+
+    gem "wiser_date"
+
+## Using the javascripts -- Coming Soon
+
+Require jquery.wiser_date in your app/assets/application.js file.
+
+    //= require jquery.wiser_date
+
+## Usage
+
+Use the wiser_date function in your views.
+
+    <%= wiser_date @user.last_login_at %>
+    
+@user.last_login_at can be any timestamp you want to display.
+Assume that the valus is set to Mon, 10 Sept 2012 12:21:16 UTC +00:00.
+
+## Options
+
+You can customized the behavior of the date display using the following options:
+
+
+date_format - Overrides the default date format [default: "%b %d, %Y"]
+    
+    <%= wiser_date @user.last_login_at, :date_format => "%Y-%m-%d" %>
+    # 
+
+time_format - Overrides the default time format [default: "%l:%M%P"]
+    
+    <%= wiser_date @user.last_login_at, :time_format => "%H:%M:%S" %>
+
+humanize - Convert date to more readable string [default: true]
+    
+    <%= wiser_date @user.last_login_at, :humanize => false %>
+
+time_first - Display time first instead of date [default: false]
+    
+    <%= wiser_date @user.last_login_at, :time_first => true %>
+
+hide_same_year - Will not display the year if the it is the same with the current year [default: false]
+    
+    <%= wiser_date @user.last_login_at, :hide_same_year => true %>
+
+capitalize - Capitalize the first letter of the date displayed [default: true]
+    
+    <%= wiser_date @user.last_login_at, :capitalize => true %>
+
+## Thanks
+Thanks to [Kenneth John Balgos](https://github.com/kennethjohnbalgos) for writing an awesome real-time date display plugin.
+
+## Support
+Open an issue in [wiser_date](https://github.com/kennethjohnbalgos/wiser_date) if you need further support or want to report a bug.
