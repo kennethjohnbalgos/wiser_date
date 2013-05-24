@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'wiser_date'
-  s.version     = '0.0.4'
+  s.version     = '0.0.5'
   s.date        = '2012-05-24'
   s.summary     = "Display dates in the coolest format."
   s.description = "Display dates in the coolest format."

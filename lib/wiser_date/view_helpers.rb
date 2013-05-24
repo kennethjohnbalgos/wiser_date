@@ -8,7 +8,11 @@ module WiserDate
     include ActionView::Context    
       
     def wiser_date(timestamp, options = {})
-      format = options[:format] if unless options.has_key?(:format)
+      if options.has_key?(:format)
+        format = options[:format] 
+      else
+        format = "%l:%M%p %b %d, %Y"
+      end
       new_timestamp = format_date(timestamp, format)
       html = content_tag(:div, new_timestamp, :class => "wiser_date", "data-timestamp" => new_timestamp)
       html += javascript_tag("jQuery(document).ready(function(){ alert('nice'); });")
@@ -23,5 +27,6 @@ module WiserDate
     def translate_format(format)
       format.gsub!(/#{FORMAT_REPLACEMENTES.keys.join("|")}/) { |match| FORMAT_REPLACEMENTES[match] }
     end
+    
   end
 end
