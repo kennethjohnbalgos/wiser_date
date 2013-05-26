@@ -97,7 +97,7 @@ module WiserDate
       meta_vars << "data-custom-format=\""+custom_format+"\""
       meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
       meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
-      meta_vars << "data-interval=\""+interval+"\""
+      meta_vars << "data-interval=\""+interval.to_s+"\""
       meta_vars << "id=\"wiser_date\""
   
       html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')};  updateWiserDate(\""+uniq_id+"\");});")
