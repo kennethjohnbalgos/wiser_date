@@ -18,6 +18,7 @@ module WiserDate
       custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
       time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
       real_time = options.has_key?(:real_time) ? options[:real_time] : true
+      interval = options.has_key?(:interval) ? options[:interval] : 20
 
       # Formats
       flat_format = "%Y%m%d%H%M%S"
@@ -95,6 +96,8 @@ module WiserDate
       meta_vars << "data-value=\"#"+uniq_id+"\""
       meta_vars << "data-custom-format=\""+custom_format+"\""
       meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
+      meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
+      meta_vars << "data-interval=\""+interval+"\""
       meta_vars << "id=\"wiser_date\""
   
       html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')};  updateWiserDate(\""+uniq_id+"\");});")

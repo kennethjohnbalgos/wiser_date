@@ -1,8 +1,8 @@
 function updateWiserDate(id) {
   if($('meta#wiser_date').attr('data-real-time-started') != "true"){
-    update_interval = 2 * 1000;
+    update_interval = parseInt($('meta#wiser_date').attr('data-interval')) * 1000;
     setInterval(function() {
-      update_timer(3600000)
+      update_timer(update_interval)
       span_ids = $('meta#wiser_date').attr('data-value');
       $(span_ids).each(function(){
         if($(this).hasClass('real_time'))
