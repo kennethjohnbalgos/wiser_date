@@ -1,11 +1,6 @@
 = Wiser Date for Rails
 
-WiserDate is a date formatting plugin written by Kenneth John Balgos (https://github.com/kennethjohnbalgos). Wiser Date features dynamic presentation of feed timestamps. Right now, it only displays the date statically. I'm writing the jQuery scripts to update the displayed dates in real-time and dynamic.
-
-
-== Installing Gem
-
-    gem "wiser_date"
+WiserDate is a date formatting plugin written by Kenneth John Balgos (https://github.com/kennethjohnbalgos). Wiser Date features dynamic presentation of feed timestamps. The plugin now supports real-time and dynamic date displays.
     
 
 == Dependency
@@ -13,7 +8,11 @@ WiserDate is a date formatting plugin written by Kenneth John Balgos (https://gi
 Rails >=3.1 and jQuery >=1.7 to make the real-time feature work.
 
 
-== Using the javascripts - Not Yet Available
+== Installation
+
+Install the gem.
+
+    gem "wiser_date"
 
 Require jquery.wiser_date in your app/assets/application.js file.
 
@@ -27,9 +26,10 @@ Use the wiser_date function in your views.
     <%= wiser_date @user.last_login_at %>
     # Sample display within few seconds: just now
     # Sample display within few minutes: about 30 minutes ago
-    # Sample display within the day: about 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: today at 12:21pm
     # Sample display after the day: yesterday 12:21pm
-    # Sample display after 2 days: Sept 10, 2013 12:21pm
+    # Sample display after 2 days: September 10, 2013 12:21pm
     
 @user.last_login_at can be any timestamp you want to display.
 
@@ -40,12 +40,21 @@ Assume that the value is "Mon, 10 Sept 2012 12:21:16 UTC +00:00".
 
 You can customize the behavior of the date display by using the following options:
 
+* *real_time* - toggles the real-time updating of displayed dates [default: true]
+    
+    <%= wiser_date @user.last_login_at, :real_time => false %>
+
+* *interval* - custom real-time update interval in seconds [default: 20]
+    
+    <%= wiser_date @user.last_login_at, :interval => 60 %>
+
 * *date_format* - overrides the default date format [default: "%b %d, %Y"]
     
     <%= wiser_date @user.last_login_at, :date_format => "%Y-%m-%d" %>
     # Sample display within few seconds: just now
     # Sample display within few minutes: about 30 minutes ago
-    # Sample display within the day: about 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: today at 12:21pm
     # Sample display after the day: yesterday 12:21pm
     # Sample display after 2 days: 2012-09-10 12:21pm
 
@@ -54,57 +63,58 @@ You can customize the behavior of the date display by using the following option
     <%= wiser_date @user.last_login_at, :time_format => "%H:%M:%S" %>
     # Sample display within few seconds: just now
     # Sample display within few minutes: about 30 minutes ago
-    # Sample display within the day: about 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: today at 12:21:16
     # Sample display after the day: yesterday 12:21:16
-    # Sample display after 2 days: Sept 10, 2013 12:21:16
+    # Sample display after 2 days: September 10, 2013 12:21:16
 
 * *humanize* - converts date to more readable string [default: true]
     
     <%= wiser_date @user.last_login_at, :humanize => false %>
-    # Sample display within few seconds: Sept 10, 2013 12:21pm
-    # Sample display within few minutes: Sept 10, 2013 12:21pm
-    # Sample display within the day: Sept 10, 2013 12:21pm
-    # Sample display after the day: Sept 10, 2013 12:21pm
-    # Sample display after 2 days: Sept 10, 2013 12:21pm
+    # Sample display within few seconds: September 10, 2013 12:21pm
+    # Sample display within few minutes: September 10, 2013 12:21pm
+    # Sample display within the day: September 10, 2013 12:21pm
+    # Sample display later within the day: September 10, 2013 12:21pm
+    # Sample display after the day: September 10, 2013 12:21pm
+    # Sample display after 2 days: September 10, 2013 12:21pm
 
 * *time_first* - displays time first instead of date [default: false]
     
     <%= wiser_date @user.last_login_at, :time_first => true %>
     # Sample display within few seconds: just now
     # Sample display within few minutes: about 30 minutes ago
-    # Sample display within the day: about 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: 12:21pm today
     # Sample display after the day: 12:21pm yesterday 
-    # Sample display after 2 days: 12:21pm Sept 10, 2013
+    # Sample display after 2 days: 12:21pm September 10, 2013
 
 * *hide_same_year* - will not display the year if the it is the same with the present year [default: false]
     
     <%= wiser_date @user.last_login_at, :hide_same_year => true %>
     # Sample display within few seconds: just now
     # Sample display within few minutes: about 30 minutes ago
-    # Sample display within the day: about 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: today at 12:21pm
     # Sample display after the day: yesterday 12:21pm
-    # Sample display after 2 days: Sept 10, 12:21pm 
+    # Sample display after 2 days: September 10, 12:21pm 
 
 * *capitalize* - capitalizes the first letter of the date displayed [default: true]
     
     <%= wiser_date @user.last_login_at, :capitalize => true %>
     # Sample display within few seconds: Just now
     # Sample display within few minutes: About 30 minutes ago
-    # Sample display within the day: About 15 hours ago
+    # Sample display within the day: about 3 hours ago
+    # Sample display later within the day: Today at 12:21pm
     # Sample display after the day: Yesterday 12:21pm
-    # Sample display after 2 days: Sept 10, 12:21pm 
+    # Sample display after 2 days: September 10, 12:21pm 
 
 * *custom_class* - adds custom classes to the containter span of the date [default: nil]
     
     <%= wiser_date @user.last_login_at, :custom_class => "date_tooltip" %>
 
-* *time_now* - accepts complete timestamp as the basis of time distances [default: nil]
+* *time_now* - accepts complete timestamp as the basis of time distances [default: server_time]
     
     <%= wiser_date @user.last_login_at, :time_now => "2012-09-10 12:21:16 +0000" %>
-
-
-== Thanks
-Thanks to me for writing an awesome real-time date display plugin :p
 
 
 == Support
