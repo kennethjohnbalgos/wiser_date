@@ -2,7 +2,6 @@ require 'date'
 
 module WiserDate
   module ViewHelpers
-  
     include ActionView::Helpers::JavaScriptHelper
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::DateHelper
@@ -10,7 +9,7 @@ module WiserDate
 
     def wiser_date(timestamp, options = {})
       # Options
-      date_format = options.has_key?(:date_format) ? options[:date_format] : "%b %d, %Y"
+      date_format = options.has_key?(:date_format) ? options[:date_format] : "%B %d, %Y"
       time_format = options.has_key?(:time_format) ? options[:time_format] : "%l:%M%P"
       humanize = options.has_key?(:humanize) ? options[:humanize] : true
       time_first = options.has_key?(:time_first) ? options[:time_first] : false
@@ -18,6 +17,7 @@ module WiserDate
       capitalize = options.has_key?(:capitalize) ? options[:capitalize] : true
       custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
       time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
+      real_time = options.has_key?(:real_time) ? options[:real_time] : true
 
       # Formats
       flat_format = "%Y%m%d%H%M%S"
@@ -31,47 +31,73 @@ module WiserDate
       # Humanize Display
       if humanize
         time_diff_in_seconds = (time_now - timestamp.to_time).ceil
+        time_diff_in_hours = (time_diff_in_seconds / (60*60))
         time_diff_in_days = (time_diff_in_seconds / (60*60*24))
-        if time_diff_in_seconds <= 30 && time_diff_in_seconds >= 0
+        if time_diff_in_seconds < 60 && time_diff_in_seconds >= 0
           custom_timestamp = "just now"
         elsif time_now.to_date - 1.day == timestamp.to_date 
           date_value = "yesterday"
           time_value = timestamp.strftime(time_format)
-          custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} #{time_value}"
-        elsif time_diff_in_days <= 1.0 && time_diff_in_days >= 0
-          custom_timestamp = "#{distance_of_time_in_words(Time.now, timestamp.to_time)} ago"
-        elsif hide_same_year && time_now.year == timestamp.year 
-          custom_timestamp = custom_timestamp.gsub(", #{time_now.year.to_s}", '')
+          custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
+        elsif time_diff_in_days < 0
+          if time_diff_in_days > -2
+            date_value = "tomorrow"
+            time_value = timestamp.strftime(time_format)
+            custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
+          elsif time_diff_in_days > -7
+            date_value = "on " + timestamp.strftime('%A')
+            time_value = timestamp.strftime(time_format)
+            custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
+          end
+        elsif time_diff_in_days < 1
+          if time_now.to_date == timestamp.to_date && time_diff_in_hours >= 8
+            date_value = "today"
+            time_value = timestamp.strftime(time_format)
+            custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
+          else
+            custom_timestamp = "#{distance_of_time_in_words(Time.now, timestamp.to_time)} ago"  
+          end
+        elsif time_diff_in_days < 7
+          date_value = "last " + timestamp.strftime('%A')
+          time_value = timestamp.strftime(time_format)
+          custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
         end
       end
-  
+
+      # Hide Same Year
+      if hide_same_year && time_now.year == timestamp.year 
+        custom_timestamp = custom_timestamp.gsub(", #{time_now.year.to_s} ", ' at')
+      end
       # Capitalize
       if capitalize
-        custom_timestamp = custom_timestamp.to_s.capitalize
+        custom_timestamp[0] = custom_timestamp[0].upcase
       end
 
+      classes = ["wiser_date"]
+      classes << custom_class if custom_class.present?
+      classes << "time_first" if time_first
+      classes << "hide_same_year" if hide_same_year
+      classes << "humanize" if humanize
+      classes << "capitalize" if capitalize
+      classes << "real_time" if real_time
+      classes = classes.join(' ')
     
       uniq_id = Digest::SHA1.hexdigest([Time.now, rand].join)
       html = content_tag(:span, custom_timestamp, 
         "id" => uniq_id,
-        "class" => "wiser_date #{custom_class if custom_class.present?}", 
+        "class" => classes, 
         "data-plain-timestamp" => plain_timestamp, 
-        "data-custom-timestamp" => custom_timestamp,
-        "data-new-custom-timestamp" => custom_timestamp
+        "data-date-format" => date_format,
+        "data-time-format" => time_format
       )
-    
+  
       meta_vars = []
       meta_vars << "data-value=\"#"+uniq_id+"\""
       meta_vars << "data-custom-format=\""+custom_format+"\""
-      meta_vars << "data-date-format=\""+date_format+"\""
-      meta_vars << "data-time-format=\""+time_format+"\""
-      meta_vars << "data-humanize=\""+humanize.to_s+"\""
-      meta_vars << "data-hide-same-year=\""+hide_same_year.to_s+"\""
-      meta_vars << "data-time-first=\""+time_first.to_s+"\""
-      meta_vars << "data-capitalize=\""+capitalize.to_s+"\""
+      meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
       meta_vars << "id=\"wiser_date\""
-    
-      html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')}});")
+  
+      html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')};  updateWiserDate(\""+uniq_id+"\");});")
       html.html_safe
     end
   end
