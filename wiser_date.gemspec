@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Display dates in the coolest format."
   s.authors     = ["Kenneth John Balgos"]
   s.email       = 'kennethjohnbalgos@gmail.com'
-  s.files       = ["lib/wiser_date/jquery.wiser_date.js", "lib/wiser_date/view_helpers.rb", "lib/wiser_date/railtie.rb", "lib/wiser_date.rb", "README.rdoc"]
+  s.files       = ["vendor/assets/javascript/jquery.wiser_date.js", "lib/wiser_date/view_helpers.rb", "lib/wiser_date/railtie.rb", "lib/wiser_date.rb", "README.rdoc"]
   s.license     = 'MIT'
   s.homepage    = "https://github.com/kennethjohnbalgos/wiser_date"
   s.add_dependency('rails', '>= 3.1')
