@@ -82,7 +82,7 @@ module WiserDate
       classes << "capitalize" if capitalize
       classes << "real_time" if real_time
       classes = classes.join(' ')
-    
+  
       uniq_id = Digest::SHA1.hexdigest([Time.now, rand].join)
       html = content_tag(:span, custom_timestamp, 
         "id" => uniq_id,
@@ -91,16 +91,16 @@ module WiserDate
         "data-date-format" => date_format,
         "data-time-format" => time_format
       )
-  
+
       meta_vars = []
-      meta_vars << "data-value=\"#"+uniq_id+"\""
+      meta_vars << "data-value=\"#"+uniq_id+".real_time\""
       meta_vars << "data-custom-format=\""+custom_format+"\""
       meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
       meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
       meta_vars << "data-interval=\""+interval.to_s+"\""
       meta_vars << "id=\"wiser_date\""
-  
-      html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+"')};  updateWiserDate(\""+uniq_id+"\");});")
+
+      html += javascript_tag("jQuery(document).ready(function(){if(jQuery('body meta#wiser_date').size() == 0){$('body').prepend('<meta "+meta_vars.join(' ')+" />')}else{$('meta#wiser_date').attr('data-value',$('meta#wiser_date').attr('data-value')+', #"+uniq_id+".real_time')};  updateWiserDate(\""+uniq_id+".real_time\");});")
       html.html_safe
     end
   end

@@ -3,14 +3,25 @@ function updateWiserDate(id) {
     update_interval = parseInt($('meta#wiser_date').attr('data-interval')) * 1000;
     setInterval(function() {
       update_timer(update_interval)
-      span_ids = $('meta#wiser_date').attr('data-value');
-      $(span_ids).each(function(){
-        if($(this).hasClass('real_time'))
-          updateDate($(this));
+      span_ids = $('meta#wiser_date').attr('data-value').split(', ').filter(function(v){return v!==''});
+      $.each(span_ids, function(i, val){
+        if($(val).size() > 0){
+          updateDate($(val));
+        }else{
+          excludeElement($(val));
+        }
       })
     },update_interval); 
   }
   $('meta#wiser_date').attr('data-real-time-started','true');
+}
+
+function excludeElement(el){
+  el_id = '#'+$(el).attr('id')+'.real_time'
+  selector = $('meta#wiser_date').attr('data-value')
+  selector = selector.replace(el_id, "")
+  selector = selector.split(', ').filter(function(v){return v!==''}).join(', ')
+  $('meta#wiser_date').attr('data-value',selector)
 }
 
 function updateDate(el){
@@ -78,6 +89,7 @@ function prettyDate(element){
           custom_timestamp = date_value + " at " + time_value;
         }
       }else{
+        excludeElement(element);
         custom_timestamp = regular_date_display
       }
     }else if(time_diff_in_days < 1){
@@ -101,10 +113,11 @@ function prettyDate(element){
         custom_timestamp = date_value + " at " + time_value;
       }
     }else{
-      element.removeClass('real_time')
+      excludeElement(element);
       custom_timestamp = regular_date_display
     }
   }else{
+    excludeElement(element);
     custom_timestamp = regular_date_display
   }
   
