@@ -52,8 +52,8 @@ module WiserDate
       end
 
       if cookies[:wiser_date_timezone].present? && !cookies[:wiser_date_timezone].blank?
-        time_now = time_now.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
-        timestamp = timestamp.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
+        time_now = time_now.to_datetime.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
+        timestamp = timestamp.to_datetime.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
       end
     
       # Formats
