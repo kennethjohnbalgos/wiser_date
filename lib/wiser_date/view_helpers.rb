@@ -35,6 +35,11 @@ module WiserDate
       custom_timestamp = timestamp.strftime(custom_format)
       plain_timestamp = timestamp.strftime(plain_format)
 
+      # Default Title
+      if title == ""
+        title = custom_timestamp
+      end
+      
       # Humanize Display
       if humanize
         time_diff_in_seconds = (time_now - timestamp.to_time).ceil
@@ -85,10 +90,6 @@ module WiserDate
       # Capitalize
       if capitalize
         custom_timestamp[0] = custom_timestamp[0].upcase
-      end
-      # Default Title
-      if title == ""
-        title = custom_timestamp
       end
 
       classes = ["wiser_date"]
