@@ -13,10 +13,12 @@ module WiserDate
       timezone = options.has_key?(:timezone) ? options[:timezone] : ""
       interval = options.has_key?(:interval) ? options[:interval] : ""
       time_now = options.has_key?(:time_now) ? options[:time_now] : ""
-      
+      custom_class = options.has_key?(:custom_class) ? options[:custom_class] : ""
+    
       cookies[:wiser_date_timezone] = timezone
       cookies[:wiser_date_interval] = interval 
       cookies[:wiser_date_time_now] = time_now
+      cookies[:wiser_date_custom_class] = custom_class
     end
 
     def wiser_date(timestamp, options = {})
@@ -29,8 +31,13 @@ module WiserDate
       hide_same_year = options.has_key?(:hide_same_year) ? options[:hide_same_year] : false
       
       capitalize = options.has_key?(:capitalize) ? options[:capitalize] : true
-      custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
       real_time = options.has_key?(:real_time) ? options[:real_time] : true
+      
+      if cookies[:wiser_date_custom_class].present? && !cookies[:wiser_date_custom_class].blank?
+        custom_class = cookies[:wiser_date_custom_class]
+      else
+        custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
+      end
       
       if cookies[:wiser_date_time_now].present? && !cookies[:wiser_date_time_now].blank?
         time_now = cookies[:wiser_date_time_now]
@@ -44,7 +51,7 @@ module WiserDate
         interval = options.has_key?(:interval) ? options[:interval] : 20
       end
 
-      if cookies[:wiser_date_timezone].present? && cookies[:wiser_date_timezone].blank?
+      if cookies[:wiser_date_timezone].present? && !cookies[:wiser_date_timezone].blank?
         time_now = time_now.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
         timestamp = timestamp.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
       end
