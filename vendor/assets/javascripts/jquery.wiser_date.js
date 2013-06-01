@@ -11,7 +11,7 @@ function updateWiserDate(id) {
   if(jQuery('meta#wiser_date').attr('data-real-time-started') != "true"){
     update_interval = parseInt(jQuery('meta#wiser_date').attr('data-interval')) * 1000;
     setInterval(function() {
-      update_timer(update_interval)
+      update_timer(update_interval * 6000)
       jQuery('.wiser_date.on').each(function(){
         updateDate(jQuery(this));
       })
@@ -144,6 +144,8 @@ function prettyDate(element){
   if(capitalize){
     custom_timestamp = custom_timestamp[0].toUpperCase() + custom_timestamp.slice(1);
   }
+  
+  custom_timestamp = custom_timestamp.replace(/ 0\:/, "12:")
   
   return custom_timestamp; // + " - ["+time_diff_in_seconds.toString()+":"+time_diff_in_days+"]";
 }
