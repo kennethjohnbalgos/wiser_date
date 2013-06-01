@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'wiser_date'
-  s.version     = '0.2.1'
+  s.version     = '0.2.2'
   s.date        = '2012-06-01'
   s.summary     = "Gorgeous real-time date display plugin"
   s.description = "Gorgeous real-time date display plugin"

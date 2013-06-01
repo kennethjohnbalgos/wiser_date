@@ -86,6 +86,10 @@ module WiserDate
       if capitalize
         custom_timestamp[0] = custom_timestamp[0].upcase
       end
+      # Default Title
+      if title == ""
+        title = custom_timestamp
+      end
 
       classes = ["wiser_date"]
       classes << custom_class if custom_class.present?
