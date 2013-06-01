@@ -41,7 +41,7 @@ module WiserDate
       if cookies[:wiser_date_interval].present? && !cookies[:wiser_date_interval].blank?
         interval = cookies[:wiser_date_interval]
       else
-        interval = options.has_key?(:interval) ? options[:interval] : cookies[:wiser_date_interval] || 20
+        interval = options.has_key?(:interval) ? options[:interval] : 20
       end
 
       if cookies[:wiser_date_timezone].present? && cookies[:wiser_date_timezone].blank?
