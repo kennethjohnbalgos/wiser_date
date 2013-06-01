@@ -32,19 +32,19 @@ module WiserDate
       custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
       real_time = options.has_key?(:real_time) ? options[:real_time] : true
       
-      if cookies[:wiser_date_time_now].present?
+      if cookies[:wiser_date_time_now].present? && !cookies[:wiser_date_time_now].blank?
         time_now = cookies[:wiser_date_time_now]
       else
         time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
       end
       
-      if cookies[:wiser_date_interval].present?
+      if cookies[:wiser_date_interval].present? && !cookies[:wiser_date_interval].blank?
         interval = cookies[:wiser_date_interval]
       else
         interval = options.has_key?(:interval) ? options[:interval] : cookies[:wiser_date_interval] || 20
       end
 
-      if cookies[:wiser_date_timezone].present?
+      if cookies[:wiser_date_timezone].present? && cookies[:wiser_date_timezone].blank?
         time_now = time_now.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
         timestamp = timestamp.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
       end
