@@ -16,15 +16,12 @@ module WiserDate
       humanize = options.has_key?(:humanize) ? options[:humanize] : true
       time_first = options.has_key?(:time_first) ? options[:time_first] : false
       hide_same_year = options.has_key?(:hide_same_year) ? options[:hide_same_year] : false
+      
       capitalize = options.has_key?(:capitalize) ? options[:capitalize] : true
       custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
       time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
       real_time = options.has_key?(:real_time) ? options[:real_time] : true
       interval = options.has_key?(:interval) ? options[:interval] : 20
-
-      # Sync Timezone
-      offset = Time.zone_offset(timestamp.zone)
-      time_now = time_now.in_time_zone(offset)
     
       # Formats
       flat_format = "%Y%m%d%H%M%S"
