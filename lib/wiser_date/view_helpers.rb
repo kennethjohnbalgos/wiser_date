@@ -1,12 +1,23 @@
 require 'date'
 
 module WiserDate
+  
   module ViewHelpers
   
     include ActionView::Helpers::JavaScriptHelper
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::DateHelper
     include ActionView::Context    
+    
+    def wiser_date_global(options = {})
+      timezone = options.has_key?(:timezone) ? options[:timezone] : ""
+      interval = options.has_key?(:interval) ? options[:interval] : ""
+      time_now = options.has_key?(:time_now) ? options[:time_now] : ""
+      
+      cookies[:wiser_date_timezone] = timezone
+      cookies[:wiser_date_interval] = interval 
+      cookies[:wiser_date_time_now] = time_now
+    end
 
     def wiser_date(timestamp, options = {})
       # Options
@@ -19,9 +30,24 @@ module WiserDate
       
       capitalize = options.has_key?(:capitalize) ? options[:capitalize] : true
       custom_class = options.has_key?(:custom_class) ? options[:custom_class] : nil
-      time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
       real_time = options.has_key?(:real_time) ? options[:real_time] : true
-      interval = options.has_key?(:interval) ? options[:interval] : 20
+      
+      if cookies[:wiser_date_time_now].present?
+        time_now = cookies[:wiser_date_time_now]
+      else
+        time_now = options.has_key?(:time_now) ? options[:time_now].to_datetime : Time.now
+      end
+      
+      if cookies[:wiser_date_interval].present?
+        interval = cookies[:wiser_date_interval]
+      else
+        interval = options.has_key?(:interval) ? options[:interval] : cookies[:wiser_date_interval] || 20
+      end
+
+      if cookies[:wiser_date_timezone].present?
+        time_now = time_now.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
+        timestamp = timestamp.in_time_zone(ActiveSupport::TimeZone[cookies[:wiser_date_timezone]]) 
+      end
     
       # Formats
       flat_format = "%Y%m%d%H%M%S"
@@ -69,7 +95,7 @@ module WiserDate
             custom_timestamp = time_first ? "#{time_value} #{date_value}" : "#{date_value} at #{time_value}"
             custom_timestamp = date_value if time_format == ""
           else
-            custom_timestamp = "#{distance_of_time_in_words(Time.now, timestamp.to_time)} ago"
+            custom_timestamp = "#{distance_of_time_in_words(time_now, timestamp.to_time)} ago"
             custom_timestamp = "today" if time_format == ""
           end
         elsif time_diff_in_days < 7
@@ -97,6 +123,7 @@ module WiserDate
       classes << "capitalize" if capitalize
       classes << "real_time" if real_time
       classes << "on" if real_time
+      classes << "-#{@timezone}-"
       classes = classes.join(' ')
 
       uniq_id = Digest::SHA1.hexdigest([Time.now, rand].join)
@@ -109,11 +136,11 @@ module WiserDate
         "title" => title
       )
 
+      formatted_time_now = time_now.strftime(plain_format)
       meta_vars = []
-      meta_vars << "data-custom-format=\""+custom_format+"\""
-      meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
-      meta_vars << "data-server-datetime=\""+time_now.strftime(plain_format)+"\""
-      meta_vars << "data-interval=\""+interval.to_s+"\""
+      meta_vars << "data-custom-format=\"" + custom_format + "\""
+      meta_vars << "data-server-datetime=\"" + formatted_time_now + "\""
+      meta_vars << "data-interval=\"" + interval.to_s + "\""
       meta_vars << "id=\"wiser_date\""
 
       html += javascript_tag("make_it_wiser_date('#" + uniq_id + "', '" + meta_vars.join(' ') + "');")
