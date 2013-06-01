@@ -11,7 +11,7 @@ function updateWiserDate(id) {
   if(jQuery('meta#wiser_date').attr('data-real-time-started') != "true"){
     update_interval = parseInt(jQuery('meta#wiser_date').attr('data-interval')) * 1000;
     setInterval(function() {
-      update_timer(update_interval * 6000)
+      update_timer(update_interval)
       jQuery('.wiser_date.on').each(function(){
         updateDate(jQuery(this));
       })
