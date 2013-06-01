@@ -1,27 +1,23 @@
+function make_it_wiser_date(id, meta_vars) {
+  jQuery(document).ready(function(){
+    if(jQuery('body meta#wiser_date').size() == 0){
+      jQuery('body').prepend("<meta " + meta_vars + " />")
+    };
+    updateWiserDate(id);
+  })
+}
+
 function updateWiserDate(id) {
-  if($('meta#wiser_date').attr('data-real-time-started') != "true"){
-    update_interval = parseInt($('meta#wiser_date').attr('data-interval')) * 1000;
+  if(jQuery('meta#wiser_date').attr('data-real-time-started') != "true"){
+    update_interval = parseInt(jQuery('meta#wiser_date').attr('data-interval')) * 1000;
     setInterval(function() {
       update_timer(update_interval)
-      span_ids = $('meta#wiser_date').attr('data-value').split(', ').filter(function(v){return v!==''});
-      $.each(span_ids, function(i, val){
-        if($(val).size() > 0){
-          updateDate($(val));
-        }else{
-          excludeElement($(val));
-        }
+      jQuery('.wiser_date.on').each(function(){
+        updateDate(jQuery(this));
       })
     },update_interval); 
   }
-  $('meta#wiser_date').attr('data-real-time-started','true');
-}
-
-function excludeElement(el){
-  el_id = '#'+$(el).attr('id')+'.real_time'
-  selector = $('meta#wiser_date').attr('data-value')
-  selector = selector.replace(el_id, "")
-  selector = selector.split(', ').filter(function(v){return v!==''}).join(', ')
-  $('meta#wiser_date').attr('data-value',selector)
+  jQuery('meta#wiser_date').attr('data-real-time-started','true');
 }
 
 function updateDate(el){
@@ -38,7 +34,7 @@ function prettyDate(element){
   humanize = element.hasClass('humanize')
   time_first = element.hasClass('time_first')
   
-  server_datetime = $('meta#wiser_date').attr('data-server-datetime')
+  server_datetime = jQuery('meta#wiser_date').attr('data-server-datetime')
   var time_now = new Date((server_datetime || "").replace(/-/g,"/").replace(/[TZ]/g," "));
   var timestamp = new Date((datetime || "").replace(/-/g,"/").replace(/[TZ]/g," "));
   var time_diff_in_seconds = ((time_now.getTime() - timestamp.getTime()) / 1000);
@@ -63,6 +59,9 @@ function prettyDate(element){
   }else if(humanize){
     if(time_diff_in_seconds < 60 && time_diff_in_seconds >= 0){
       custom_timestamp = "just now"
+      if(time_format == ""){
+        custom_timestamp = "today"
+      }
     }else if(custom_format(date_yesterday, plain_date_format) == custom_format(timestamp, plain_date_format)){
       date_value = "yesterday"
       time_value = custom_format(timestamp, time_format)
@@ -71,6 +70,9 @@ function prettyDate(element){
       }else{
         custom_timestamp = date_value + " at " + time_value;
       } 
+      if(time_format == ""){
+        custom_timestamp = date_value
+      }
     }else if(time_diff_in_days < 0){
       if(time_diff_in_days > -2){
         date_value = "tomorrow"
@@ -79,6 +81,9 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
+        } 
+        if(time_format == ""){
+          custom_timestamp = date_value
         }
       }else if(time_diff_in_days > -7){
         date_value = "on " + custom_format(timestamp, "%A")
@@ -87,9 +92,12 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
+        } 
+        if(time_format == ""){
+          custom_timestamp = date_value
         }
       }else{
-        excludeElement(element);
+        element.removeClass('on')
         custom_timestamp = regular_date_display
       }
     }else if(time_diff_in_days < 1){
@@ -100,9 +108,15 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
+        } 
+        if(time_format == ""){
+          custom_timestamp = date_value
         }
       }else{
         custom_timestamp = humanize_format(time_diff_in_seconds, time_diff_in_days);
+        if(time_format == ""){
+          custom_timestamp = "today"
+        }
       }
     }else if(time_diff_in_days < 7){
       date_value = "last " + custom_format(timestamp, "%A")
@@ -111,13 +125,16 @@ function prettyDate(element){
         custom_timestamp = time_value + " " + date_value;
       }else{
         custom_timestamp = date_value + " at " + time_value;
+      } 
+      if(time_format == ""){
+        custom_timestamp = date_value
       }
     }else{
-      excludeElement(element);
+      element.removeClass('on')
       custom_timestamp = regular_date_display
     }
   }else{
-    excludeElement(element);
+    element.removeClass('on')
     custom_timestamp = regular_date_display
   }
   
@@ -133,12 +150,12 @@ function prettyDate(element){
 
 function update_timer(interval){
   if(!interval){interval = 1000;}
-  current_datetime = $('meta#wiser_date').attr('data-server-datetime');
+  current_datetime = jQuery('meta#wiser_date').attr('data-server-datetime');
   current_datetime = new Date((current_datetime || "").replace(/-/g,"/").replace(/[TZ]/g," "));
   current_datetime.setTime(current_datetime.getTime() + interval);
   current_datetime = custom_format(current_datetime, "%Y-%m-%d %H:%M:%S");
-  $('meta#wiser_date').attr('data-server-datetime', current_datetime);
-  $('#real_time').text('The actual server time is ' + current_datetime);
+  jQuery('meta#wiser_date').attr('data-server-datetime', current_datetime);
+  jQuery('#real_time').text('The actual server time is ' + current_datetime);
 }
 
 function humanize_format(sec_diff, day_diff){
