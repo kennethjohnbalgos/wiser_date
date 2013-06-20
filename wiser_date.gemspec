@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'wiser_date'
-  s.version     = '0.2.9'
-  s.date        = '2012-06-01'
+  s.version     = '0.3.0'
+  s.date        = '2012-06-20'
   s.summary     = "Gorgeous real-time date display plugin"
   s.description = "Gorgeous real-time date display plugin"
   s.authors     = ["Kenneth John Balgos"]

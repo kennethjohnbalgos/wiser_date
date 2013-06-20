@@ -15,7 +15,7 @@ function updateWiserDate(id) {
       jQuery('.wiser_date.on').each(function(){
         updateDate(jQuery(this));
       })
-    },update_interval); 
+    },update_interval);
   }
   jQuery('meta#wiser_date').attr('data-real-time-started','true');
 }
@@ -28,19 +28,19 @@ function prettyDate(element){
   datetime = element.attr('data-plain-timestamp')
   date_format = element.attr('data-date-format')
   time_format = element.attr('data-time-format')
-  
+
   hide_same_year = element.hasClass('hide_same_year')
   capitalize = element.hasClass('capitalize')
   humanize = element.hasClass('humanize')
   time_first = element.hasClass('time_first')
-  
+
   server_datetime = jQuery('meta#wiser_date').attr('data-server-datetime')
   var time_now = new Date((server_datetime || "").replace(/-/g,"/").replace(/[TZ]/g," "));
   var timestamp = new Date((datetime || "").replace(/-/g,"/").replace(/[TZ]/g," "));
   var time_diff_in_seconds = ((time_now.getTime() - timestamp.getTime()) / 1000);
   var time_diff_in_hours = Math.floor(time_diff_in_seconds / 3600);
   var time_diff_in_days = Math.floor(time_diff_in_seconds / 86400);
-  
+
   date_yesterday = time_now;
   date_yesterday.setDate(time_now.getDate() - 1);
 
@@ -53,7 +53,7 @@ function prettyDate(element){
   }else{
     regular_date_display = custom_format(timestamp, date_format + " " + time_format);
   }
-  
+
   if(isNaN(time_diff_in_days)){
     custom_timestamp = datetime;
   }else if(humanize){
@@ -69,7 +69,7 @@ function prettyDate(element){
         custom_timestamp = time_value + " " + date_value;
       }else{
         custom_timestamp = date_value + " at " + time_value;
-      } 
+      }
       if(time_format == ""){
         custom_timestamp = date_value
       }
@@ -81,7 +81,7 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
-        } 
+        }
         if(time_format == ""){
           custom_timestamp = date_value
         }
@@ -92,7 +92,7 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
-        } 
+        }
         if(time_format == ""){
           custom_timestamp = date_value
         }
@@ -108,7 +108,7 @@ function prettyDate(element){
           custom_timestamp = time_value + " " + date_value;
         }else{
           custom_timestamp = date_value + " at " + time_value;
-        } 
+        }
         if(time_format == ""){
           custom_timestamp = date_value
         }
@@ -125,7 +125,7 @@ function prettyDate(element){
         custom_timestamp = time_value + " " + date_value;
       }else{
         custom_timestamp = date_value + " at " + time_value;
-      } 
+      }
       if(time_format == ""){
         custom_timestamp = date_value
       }
@@ -137,16 +137,16 @@ function prettyDate(element){
     element.removeClass('on')
     custom_timestamp = regular_date_display
   }
-  
+
   if(hide_same_year){
     custom_timestamp = custom_timestamp.replace(", "+time_now.getFullYear(), ' at')
   }
   if(capitalize){
     custom_timestamp = custom_timestamp[0].toUpperCase() + custom_timestamp.slice(1);
   }
-  
+
   custom_timestamp = custom_timestamp.replace(/ 0\:/, "12:")
-  
+
   return custom_timestamp; // + " - ["+time_diff_in_seconds.toString()+":"+time_diff_in_days+"]";
 }
 
@@ -208,15 +208,15 @@ function lead_zero(val, extra){
 }
 
 function DateFmt() {
-  this.dateMarkers = { 
-     d:['getDate',function(v) { return ("0"+v).substr(-2,2)}], 
+  this.dateMarkers = {
+     d:['getDate',function(v) { return ("0"+v).substr(-2,2)}],
      m:['getMonth',function(v) { return ("0"+(v+1)).substr(-2,2)}],
      b:['getMonth',function(v) {
          var mthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
          return mthNames[v];
          }],
      B:['getMonth',function(v) {
-         var mthNames = ["January","February","March","April","May","June","July","August","September","October","Novovember","December"];
+         var mthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
          return mthNames[v];
          }],
      a:['getDay',function(v) {
